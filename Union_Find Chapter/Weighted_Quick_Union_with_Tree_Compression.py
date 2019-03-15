@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar 14 16:31:28 2019
+Created on Fri Mar 15 12:02:59 2019
 
 @author: kartiktanksali
 """
 
-#A typical example of Quick_Union_find Algorithm
-#Complexity N^2 - N*M worst case
+#A typical example of Weighted Quick Union Algorithm - with tree compression
+#Complexity LogN - M + Log^2N - Worst Case
 
 class Union_Find:
     lst = []
+    sz = []
     def __init__(self,n):
         if n==0:
             print("No Nodes created")
         else:
             for i in range(n+1):
+                self.sz.append(1)
                 self.lst.append(i)
             print("Nodes Created")
     
@@ -23,13 +25,19 @@ class Union_Find:
     def Union(self,p,q):
         firstVal = self.root(p)
         secondVal = self.root(q)
-        self.lst[firstVal]=secondVal
+        if self.sz[firstVal]<self.sz[secondVal]:
+            self.lst[firstVal]=secondVal
+            self.sz[secondVal]+=self.sz[firstVal]
+        else:
+            self.lst[secondVal]=firstVal
+            self.sz[firstVal]+=self.sz[secondVal]
         
         return "Union Done"
     
     def root(self,i):
         while(i!=self.lst[i]):
-            i=self.lst[i]
+            i=self.lst[self.lst[i]]
+            i = self.lst[i]
         return i
                 
         
